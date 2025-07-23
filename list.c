@@ -83,8 +83,34 @@ int8_t insert(List* list, UStr s, int32_t index) {
 		return 0;
 
 
+	if(list -> size ==  list -> capacity){
+
+		int newCap;
+		
+		if(list -> capacity == 0 ){
+			newCap = 1;
+		}else{
+			newCap = list -> capacity *2; 
+		}
+
+		UStr* new = malloc(newCap * sizeof(UStr));
+
+		if(list -> data){
+			memcpy(new, list -> data, list -> size * sizeof(UStr));
+			free(list -> data);
+		}
+
+		list -> data = new;
+		list -> capacity = newCap;	
+	}
+
+	for( int i = list -> size -1; i >= index; --i)
+		list -> data[i+1] = list -> data[i];
 
 
+	list ->  data[index] = s;
+	list -> size ++;
+	return 1;
 }
 
 /*

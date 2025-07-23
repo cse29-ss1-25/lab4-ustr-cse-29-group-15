@@ -40,7 +40,6 @@ UStr substring(UStr s, int32_t start, int32_t end) {
 	// TODO: implement this
 
 }
-
 /*
 Given 2 strings s1 and s2, returns a string that is the result of 
 concatenating s1 and s2. 
@@ -57,7 +56,8 @@ removed from the original string.
 Returns the original string if index is out of bounds.
 */
 UStr removeAt(UStr s, int32_t index) {
-	 if (index < 0 || index >= s.codepoints) {
+
+	if (index < 0 || index >= s.codepoints) {
         return new_ustr(s.contents); // return a copy
     }
 
@@ -76,7 +76,8 @@ UStr removeAt(UStr s, int32_t index) {
     free(new_str);
     return result;
 
-}
+   
+    }
 
 /*
 Given a string s, return s reversed. 
@@ -84,6 +85,7 @@ Given a string s, return s reversed.
 Example: reverse("apples🍎 and bananas🍌") = "🍌sananab dna 🍎selppa")
 */
 UStr reverse(UStr s) {
+/*
 	char* reversed = malloc(s.bytes + 1);
     int32_t offset = 0;
 
@@ -99,7 +101,7 @@ UStr reverse(UStr s) {
     UStr result = new_ustr(reversed);
     free(reversed);
     return result;
-
+*/
 }
 
 
