@@ -37,16 +37,52 @@ and ending at index end (exclusive).
 Returns an empty string on invalid range.
 */
 UStr substring(UStr s, int32_t start, int32_t end) {
-	// TODO: implement this
+    if(start <0 || start >= end || end> s.codepoints){
+        return new_ustr("");
+    }
 
+    int start_byte = bi_of_cpi(s.contents, start);
+    int end_byte = bi_of_cpi(s.contents, end);
+
+    if(start_byte < 0 || end_byte < 0){
+	    return new_ustr("");
+    }
+
+    char* new_contents  = malloc(end_byte- start_byte + 1);
+    if(! new_contents){
+	 return new_ustr("");
+    }
+
+    memcpy(new_contents, s.contents + start_byte, end_byte- start_byte);    
+    new_contents[end_byte- start_byte] = '\0';
+
+    UStr result = new_ustr(new_contents);
+    free(new_contents);
+
+    return result;
 }
 /*
 Given 2 strings s1 and s2, returns a string that is the result of 
 concatenating s1 and s2. 
 */
 UStr concat(UStr s1, UStr s2) {
-	// TODO: implement this
+    char* new_contents = malloc(s1.bytes + s2.bytes + 1);
+    if(!new_contents){
+	    return new_ustr("");
+    }
 
+    memcpy(new_contents, s1.contents, s1.bytes);
+    memcpy(new_contents + s1.bytes, s2.contents, s2.bytes);
+    new_contents[s1.bytes + s2.bytes] = '\0';
+
+    UStr result;
+
+    result.contents = new_contents;
+    result.codepoints = s1.codepoints + s2.codepoints;
+    result.bytes =  s1.bytes + s2.bytes;
+    result.is_ascii = s1.is_ascii && s2.is_ascii;
+
+    return result;
 }
 
 /*
@@ -61,8 +97,8 @@ UStr removeAt(UStr s, int32_t index) {
         return new_ustr(s.contents); // return a copy
     }
 
-    int32_t start_byte = utf8_index(s.contents, index);
-    int32_t end_byte = utf8_index(s.contents, index + 1);
+    int32_t start_byte = bi_of_cpi(s.contents, index);
+    int32_t end_byte = bi_of_cpi(s.contents, index + 1);
     int32_t removed_bytes = end_byte - start_byte;
 
     int32_t new_bytes = s.bytes - removed_bytes;
@@ -90,8 +126,8 @@ UStr reverse(UStr s) {
     int32_t offset = 0;
 
     for (int32_t i = s.codepoints - 1; i >= 0; i--) {
-        int32_t start = utf8_index(s.contents, i);
-        int32_t end = utf8_index(s.contents, i + 1);
+        int32_t start = bi_of_cpi(s.contents, i);
+        int32_t end = bi_of_cpi(s.contents, i + 1);
         int32_t len = end - start;
         memcpy(reversed + offset, s.contents + start, len);
         offset += len;
