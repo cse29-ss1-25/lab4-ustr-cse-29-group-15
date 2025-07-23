@@ -38,11 +38,15 @@ Returns an empty string on invalid range.
 */
 UStr substring(UStr s, int32_t start, int32_t end) {
     if(start <0 || start >= end || end> s.codepoints){
-    return new_ustr("");
+        return new_ustr("");
     }
 
     int start_byte = bi_of_cpi(s.contents, start);
     int end_byte = bi_of_cpi(s.contents, end);
+
+    if(start_byte < 0 || end_byte < 0){
+	    return new_ustr("");
+    }
 
     char* new_contents  = malloc(end_byte- start_byte + 1);
     if(! new_contents){
@@ -93,8 +97,8 @@ UStr removeAt(UStr s, int32_t index) {
         return new_ustr(s.contents); // return a copy
     }
 
-    int32_t start_byte = utf8_index(s.contents, index);
-    int32_t end_byte = utf8_index(s.contents, index + 1);
+    int32_t start_byte = bi_of_cpi(s.contents, index);
+    int32_t end_byte = bi_of_cpi(s.contents, index + 1);
     int32_t removed_bytes = end_byte - start_byte;
 
     int32_t new_bytes = s.bytes - removed_bytes;
@@ -120,8 +124,8 @@ UStr reverse(UStr s) {
     int32_t offset = 0;
 
     for (int32_t i = s.codepoints - 1; i >= 0; i--) {
-        int32_t start = utf8_index(s.contents, i);
-        int32_t end = utf8_index(s.contents, i + 1);
+        int32_t start = bi_of_cpi(s.contents, i);
+        int32_t end = bi_of_cpi(s.contents, i + 1);
         int32_t len = end - start;
         memcpy(reversed + offset, s.contents + start, len);
         offset += len;
