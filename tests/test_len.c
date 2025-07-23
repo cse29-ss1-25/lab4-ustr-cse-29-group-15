@@ -10,8 +10,11 @@ int main() {
         if (l > 0 && input[l - 1] == '\n') {
             input[l - 1] = '\0';
         }
-
+	
         UStr s = new_ustr(input);
-        printf("len(%s) = %d\n", s.contents, len(s));
+        
+	printf("len(%s) = %d\n", s.contents, len(s));
+    
+    	free_ustr(s);
     }
 }
