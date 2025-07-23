@@ -36,6 +36,37 @@ containing all the strings in list joined by the separator.
 UStr join(List* list, UStr separator) {
     // TODO: implement this
 
+
+	if(list == NULL || list -> size == 0)
+		return new_ustr("");
+
+	int tot = 0;
+	int sep_len = strlen(separator.contents);
+
+	for(int i = 0; i < list -> size; i++){
+		tot += strlen(list->data[i].contents);
+	
+		if( i < list -> size -1)
+			tot += sep_len;
+	}
+
+
+	char* join = malloc(tot + 1);
+
+	join[0] = '\0';
+
+	for(int i=0; i < list -> size; i ++){
+	
+		strcat(join,list-> data[i].contents);
+
+		if(i < list -> size - 1)
+			strcat( join, separator.contents);
+
+	}
+
+	UStr result = new_ustr(join);
+	return result;
+
 }
 
 /*
@@ -46,6 +77,13 @@ Returns 1 on success, 0 if the index is invalid (out of bounds).
 */
 int8_t insert(List* list, UStr s, int32_t index) {
     // TODO: implement this
+
+
+	if(index < 0 || index > list ->size)
+		return 0;
+
+
+
 
 }
 
